@@ -1,0 +1,85 @@
+name: CI/CD
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  release:
+    types: [published]
+  # build-and-release will be triggered by tags in its own job condition
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.13]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r build/requirements.txt
+        pip install pytest-cov codecov
+
+    - name: Run linting
+      run: |
+        black . --check
+        flake8 . --config build/.flake8
+        mypy . --config build/mypy.ini
+
+    - name: Run tests with coverage
+      run: |
+        pytest tests/ --cov=main --cov-report=xml --cov-report=term-missing
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: true
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: unittests
+        name: codecov-umbrella
+        verbose: true
+        config: build/codecov.yml
+
+  release:
+    needs: build-and-test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r build/requirements.txt
+
+    - name: Create deployment package
+      run: |
+        mkdir -p build/package
+        cp main.py build/package/
+        cp templates/template.yaml build/package/
+        cd build/package
+        zip -r ../../aws-cost-reporter.zip .
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: aws-cost-reporter.zip
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
