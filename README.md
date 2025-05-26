@@ -51,10 +51,10 @@ aws cloudformation deploy \
 | `LambdaMemorySize` | Memory size (MB) | 128 |
 | `LambdaTimeout` | Timeout (seconds) | 60 |
 
-
 ## Project Structure
 
-```
+```text
+
 .
 ├── .github/          # GitHub Actions workflows
 ├── build/           # Build artifacts and dependencies
