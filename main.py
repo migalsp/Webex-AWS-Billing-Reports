@@ -102,10 +102,10 @@ class AWSCostReporter:
         return (
             f"🔔 **Daily AWS Billing Notification** 🔔\n"
             f"📂 **Project:** {self.account_name}\n\n"
-            f"📅 **Yesterday's Spend (UTC - {dates['start_date']}):** **${costs['yesterday_total']:.2f}**\n"
+            f"📅 **Yesterday's Spend (UTC - {dates['start_date']}):** **${costs['yesterday_total']:.2f}**\n"  # noqa: E501
             f"📌 **Service Breakdown:**\n{service_details}\n\n"
-            f"📊 **Today's Forecasted Spend (UTC - {dates['end_date']}):** **${costs['forecasted']:.2f}**\n"
-            f"🧾 **Total Spend This Month (UTC - {dates['first_day_of_month']} to {dates['end_date']}):** **${costs['month_total']:.2f}**\n"
+            f"📊 **Today's Forecasted Spend (UTC - {dates['end_date']}):** **${costs['forecasted']:.2f}**\n"  # noqa: E501
+            f"🧾 **Total Spend This Month (UTC - {dates['first_day_of_month']} to {dates['end_date']}):** **${costs['month_total']:.2f}**\n"  # noqa: E501
         )
 
     def send_to_webex(self, message):
