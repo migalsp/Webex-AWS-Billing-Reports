@@ -33,7 +33,7 @@ jobs:
       run: |
         black . --check
         flake8 . --config build/.flake8
-        mypy .
+        mypy . --config build/mypy.ini
 
     - name: Run tests with coverage
       run: |
