@@ -1,8 +1,9 @@
-from main import AWSCostReporter, lambda_handler
 import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+
+from main import AWSCostReporter, lambda_handler  # noqa: E402
 
 # Environment variable stubs for tests
 os.environ["WEBHOOK_URL"] = "https://example.com/webhook"
