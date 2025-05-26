@@ -71,7 +71,7 @@ jobs:
     - name: Create deployment package
       run: |
         mkdir -p build/package
-        cp -r src/lambda/* build/package/
+        cp main.py build/package/
         cp templates/template.yaml build/package/
         cd build/package
         zip -r ../../aws-cost-reporter.zip .
