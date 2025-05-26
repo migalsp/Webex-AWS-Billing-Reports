@@ -2,10 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
-  # Release pipeline only on tags
   workflow_dispatch:
   release:
     types: [published]
